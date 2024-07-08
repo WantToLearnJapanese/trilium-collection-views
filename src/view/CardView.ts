@@ -1,6 +1,6 @@
 import { AttributeConfig } from "collection-views/config";
 import { appendChildren } from "collection-views/dom";
-import { getCoverUrl } from "collection-views/notes";
+import { getCoverUrl, getIconClass } from "collection-views/notes";
 import { View } from "collection-views/view/View";
 
 /**
@@ -37,7 +37,7 @@ export abstract class CardView extends View {
 		note: NoteShort,
 		showEmpty: boolean,
 	): Promise<HTMLElement | undefined> {
-		const { coverHeight } = this.config;
+		const { coverHeight, useIconCover } = this.config;
 		if (coverHeight === 0) {
 			return undefined;
 		}
@@ -48,13 +48,27 @@ export abstract class CardView extends View {
 		}
 
 		const $cover = document.createElement("div");
-		$cover.className = "collection-view-card-cover";
-		if (url) {
-			$cover.style.backgroundImage = `url("${url}")`;
-		}
 		if (coverHeight) {
 			$cover.style.height = `${coverHeight}px`;
 		}
+
+		$cover.className = "collection-view-card-cover";
+		if (useIconCover) { // Use note's icon (iconClass) as a cover background-image
+			const iconClass = await getIconClass(note);
+			if (iconClass) {
+				const iconClasses = iconClass.split(" ");
+				for (const iconClass of iconClasses) {
+					const iconClass_ = iconClass.trim();
+					if (iconClass_)
+						$cover.classList.add(iconClass_);
+				}
+				return $cover;
+			}
+		}
+		if (url) {
+			$cover.style.backgroundImage = `url("${url}")`;
+		}
+
 		return $cover;
 	}
 

@@ -45,6 +45,31 @@ export function parseFloatStrict(value: unknown): number {
 	return parseFloat(value);
 }
 
+
+/**
+ * Parse a optional boolean value from a string.
+*/
+export function parseOptionalBoolean(
+	value: unknown,
+	defaultValue: boolean,
+): boolean {
+	if (typeof value === "boolean") {
+		return value;
+	}
+	if (typeof value !== "string") {
+		return defaultValue;
+	}
+
+	switch (value.trim().toLowerCase()) {
+		case "true":
+			return true;
+		case "false":
+			return false;
+		default:
+			return defaultValue;
+	}
+}
+
 /**
  * Returns a number clamped between two values (inclusive).
  */

@@ -23,8 +23,10 @@ export class GalleryView extends CardView {
 
 		const $gallery = document.createElement("div");
 		$gallery.className = "collection-view-gallery";
-		if (columns) {
+		if (typeof columns === "number") {
 			$gallery.style.gridTemplateColumns = `repeat(${columns}, minmax(0, 1fr))`;
+		}else if (typeof columns === "string" && columns === "auto") {
+			$gallery.style.gridTemplateColumns = `repeat(auto-fill, minmax(80px, 1fr))`;
 		}
 		await staggeredRender($gallery, initialRenderSize, this.notes, (note) =>
 			this.renderCard(note, true),

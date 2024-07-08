@@ -1,5 +1,8 @@
 import { AttributeConfig } from "collection-views/config/AttributeConfig";
-import { parseOptionalInt } from "collection-views/math";
+import { 
+	parseOptionalInt, 
+	parseOptionalBoolean,
+} from "collection-views/math";
 import {
 	attributePathRegex,
 	getAttributeValueByPath,
@@ -25,9 +28,11 @@ export class ViewConfig {
 	query = "";
 	groupBy?: AttributeConfig;
 	sort: SortAttribute[] = [];
-	columns?: number;
+	columns?: number | string;
 	columnWidth?: number;
 	coverHeight?: number;
+	useIconCover = false;
+	noSort = false;
 
 	attributes: AttributeConfig[] = [];
 
@@ -40,6 +45,8 @@ export class ViewConfig {
 		this.parseColumns(note.getLabelValue("columns") ?? "");
 		this.parseColumnWidth(note.getLabelValue("columnWidth") ?? "");
 		this.parseCoverHeight(note.getLabelValue("coverHeight") ?? "");
+		this.parseUseIconCover(note.getLabelValue("useIconCover") ?? "");
+		this.parseNoSort(note.getLabelValue("noSort") ?? "");
 		this.parseAttributes(
 			note.getLabels("attribute").map((label) => label.value),
 		);
@@ -100,7 +107,13 @@ export class ViewConfig {
 	 * Sets the number of columns for the board view from a string.
 	 */
 	parseColumns(value: string): void {
-		this.columns = parseOptionalInt(value, 1, 20);
+	   var columns = parseOptionalInt(value, 1, 20);
+	   if (columns === undefined) {
+		   this.columns = value;
+	   }
+	   else {
+		   this.columns = columns;
+	   }
 	}
 
 	/**
@@ -123,6 +136,21 @@ export class ViewConfig {
 	parseAttributes(values: string[]): void {
 		this.attributes = values.map((value) => new AttributeConfig(value));
 	}
+
+	/**
+	 * Sets the useIconCover property from a string.
+	 */
+	parseUseIconCover(value: string): void {
+		this.useIconCover = parseOptionalBoolean(value, false);
+	}
+
+	/**
+	 * Sets the noSort property from a string.
+	 */
+	parseNoSort(value: string): void {
+		this.noSort = parseOptionalBoolean(value, false);
+	}
+
 
 	/**
 	 * Returns the query with all tokens replaced with their respective values.

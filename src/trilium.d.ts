@@ -22,6 +22,7 @@ interface NoteShort {
 	getMetadata?(): Promise<FNoteMetadata>; // Available since Trilium v0.61.6.
 	getNoteComplement?(): Promise<FBlob | NoteComplement>; // Deprecated and returns FBlob since Trilium v0.61.
 	getRelationTargets(name?: string): Promise<NoteShort[]>;
+	getChildNotes(): Promise<NoteShort[]>;
 }
 
 // Available since Trilium v0.61.

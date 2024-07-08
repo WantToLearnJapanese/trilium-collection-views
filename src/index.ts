@@ -47,13 +47,25 @@ async function render(): Promise<void> {
 		);
 		return;
 	}
+	const query = await config.getQuery();
+	var notes;
+	switch (query) {
+		case "!children": {
+			notes = await config.note.getChildNotes();
+			break;
+		}
+		default:
+			notes = await api.searchForNotes(query);
+	}
 
-	const notes = await api.searchForNotes(await config.getQuery());
 	if (!notes.length) {
 		renderError("No notes found.");
 		return;
 	}
-	await sortNotes(notes, config.sort);
+
+	if (!config.noSort){
+		await sortNotes(notes, config.sort);
+	}
 
 	let $view;
 	switch (config.view) {

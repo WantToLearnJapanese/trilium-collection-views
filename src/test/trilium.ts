@@ -128,6 +128,10 @@ abstract class BaseMockFNote {
 
 		return targets;
 	}
+
+	public async getChildNotes(): Promise<NoteShort[]> {
+		return this.getRelationTargets("child");
+	}
 }
 
 /**

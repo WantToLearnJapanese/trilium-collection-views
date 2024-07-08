@@ -445,3 +445,12 @@ export async function getDateModified(note: NoteShort): Promise<string | null> {
 	}
 	return null;
 }
+
+
+export async function getIconClass(note: NoteShort): Promise<string | null> {
+	var iconClass = await getLabelValueByPath(note, "iconClass")
+	if (typeof iconClass === "string") {
+		iconClass = iconClass.trim();
+	}
+	return iconClass || null;
+}
